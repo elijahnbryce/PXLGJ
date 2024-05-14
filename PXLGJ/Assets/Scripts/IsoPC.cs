@@ -11,6 +11,12 @@ public class IsoPC : MonoBehaviour
     private Vector2 dirIn, currPos, movement, newPos;
     private Rigidbody2D rb;
 
+    [Header("Lasso")]
+    [SerializeField] private Transform lassoPrefab;
+    [SerializeField] private float  cooldown = 3f, projLife = 7f;
+    private float throwStrength;
+    private bool yeehaw = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -28,5 +34,31 @@ public class IsoPC : MonoBehaviour
         newPos = currPos + movement * Time.fixedDeltaTime;
         icr.SetDirection(movement);
         rb.MovePosition(newPos);
+    }
+
+    private void Update()
+    {
+        if (!yeehaw)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+
+            }
+            else StartCoroutine("ShootOnDelay()");
+        }
+    }
+
+    private void Shoot()
+    {
+        Transform lasso = Instantiate(lassoPrefab, transform.parent.position, Quaternion.identity); // change Quaternion to dirIn
+        lasso.GetComponent<Rigidbody2D>().AddForce(dirIn);
+    }
+
+    private IEnumerator ShootOnDelay()
+    {
+        yeehaw = true;
+        Shoot();
+        yield return new WaitForSeconds(cooldown);
+        yeehaw = false;
     }
 }
