@@ -13,14 +13,20 @@ public class IsoPC : MonoBehaviour
 
     [Header("Lasso")]
     [SerializeField] private Transform lassoPrefab;
-    [SerializeField] private float  cooldown = 3f, projLife = 7f;
-    private float throwStrength;
+    [SerializeField] private float maxPower = 47f, maxHold = 3f, cooldown = 3f, projLife = 3f;
+    private float throwStrength, shootStartTime, shootDownDuration;
     private bool yeehaw = false;
+    private PowerBar pbnj;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         icr = GetComponentInChildren<IsoCRenderer>();
+    }
+
+    private void Start()
+    {
+        pbnj = GetComponent<PowerBar>();
     }
 
     private void FixedUpdate()
@@ -38,20 +44,42 @@ public class IsoPC : MonoBehaviour
 
     private void Update()
     {
-        if (!yeehaw)
-        {
-            if (Input.GetKey(KeyCode.Space))
-            {
+        if (!yeehaw) Hold2Shoot();
+    }
 
-            }
-            else StartCoroutine("ShootOnDelay()");
+    private void Hold2Shoot()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            shootStartTime = Time.time;
+            pbnj.ShowBar();
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            StartCoroutine(ShootOnDelay());
+            pbnj.HideBar();
+        }
+        if (Input.GetKey(KeyCode.Space))
+        {
+            shootDownDuration = Time.time - shootStartTime;
+            throwStrength = CalcLaunchPower(shootDownDuration);
+            pbnj.UpdateBar(shootDownDuration);
         }
     }
 
-    private void Shoot()
+    private float CalcLaunchPower(float holdTime)
     {
-        Transform lasso = Instantiate(lassoPrefab, transform.parent.position, Quaternion.identity); // change Quaternion to dirIn
-        lasso.GetComponent<Rigidbody2D>().AddForce(dirIn);
+        float holdTimeNormal = Mathf.Clamp01(holdTime / maxHold);
+        return holdTimeNormal * maxPower;
+    }
+
+    private void Shoot()
+    {        
+        Quaternion quaternion = Quaternion.LookRotation(new Vector3(dirIn.x, dirIn.y, 0), Vector3.up);
+
+        Transform lasso = Instantiate(lassoPrefab, transform.parent.position, quaternion);
+        lasso.GetComponent<Rigidbody2D>().velocity = dirIn * throwStrength;
+        Destroy(lasso.gameObject, projLife);
     }
 
     private IEnumerator ShootOnDelay()

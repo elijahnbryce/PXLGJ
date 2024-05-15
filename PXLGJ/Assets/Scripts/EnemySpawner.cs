@@ -4,32 +4,40 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    private static GameManager gm;
+
     [Header("Time")]
     [SerializeField] private float spawnTime = 13f, shortestInterval = 3f;
     [SerializeField] private bool spawning = false;
     [SerializeField] private int spawnLimit = 10;
-    private int spawnCount = 0;
 
     [Header("Area")]
-    [SerializeField] private GameObject narcoP;
+    [SerializeField] private GameObject narcoP, enemyHolder;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float spawnrange = 47f;
 
+
+    private void Start()
+    {
+        gm = GameManager._Instance;
+    }
+
     private void Update()
     {
-        if (!spawning) StartCoroutine("SpawnOnDelay()");
+        if (!spawning) StartCoroutine(SpawnOnDelay());
     }
 
     private void Spawn()
     {
-        if (spawnCount <= spawnLimit)
+        if (gm.GetEnemyCount() <= spawnLimit)
         {
             float randomX = Random.Range(-spawnrange, spawnrange);
             float randomY = Random.Range(-spawnrange, spawnrange);
             Vector3 thisSpawn = new Vector3(spawnPoint.transform.position.x + randomX, spawnPoint.transform.position.y + randomY, 0);
             
-            Instantiate(narcoP, thisSpawn, spawnPoint.rotation);
-            spawnCount++;
+            GameObject newNarc = Instantiate(narcoP, thisSpawn, spawnPoint.rotation);
+            newNarc.transform.parent = enemyHolder.transform;
+            gm.AddEnemy(newNarc);
         }
     }
 
