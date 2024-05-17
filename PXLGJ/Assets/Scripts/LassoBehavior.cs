@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class LassoBehavior : MonoBehaviour
 {
-    private static GameManager gm;
+    private GameManager gm;
     private Animator anim;
     private Rigidbody2D rb;
     
     [SerializeField] private float decelearation = 0.95f, maxStopSpeed = 1f;
+    public float speed;
 
     private void Start()
     {
@@ -18,9 +19,11 @@ public class LassoBehavior : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
+    {   
+        speed = rb.velocity.magnitude;
         // decel unless barely moving, then set to 0
-        rb.velocity = (Mathf.Abs(rb.velocity.magnitude) > 0.1) ? rb.velocity * decelearation * Time.deltaTime : Vector2.zero;
+        rb.velocity = (Mathf.Abs(rb.velocity.magnitude) > 0.1) ? rb.velocity * decelearation : Vector2.zero;
+        anim.SetBool("Stopped", Mathf.Abs(rb.velocity.magnitude) > 0.1);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -34,9 +37,9 @@ public class LassoBehavior : MonoBehaviour
         }
     }
 
-    private static void CatchSub(GameObject narc)
+    private void CatchSub(GameObject narc)
     {
-        // play catching animation
+        anim.SetTrigger("Catch");
         Debug.Log("Catching Narco");
         // trigger sub caught
         gm.RemoveEnemy(narc); // change sub to call this after sub catch animation

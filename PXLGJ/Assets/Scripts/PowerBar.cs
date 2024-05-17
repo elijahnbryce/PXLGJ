@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public class PowerBar : MonoBehaviour
 {
-    private GameObject powerBar;
+    [SerializeField]private GameObject powerBar;
     [SerializeField] private float barHoldTime = 1f;
 
     private void Start()
     {
-        powerBar = GetComponentInChildren<GameObject>();
-        HideBar();
+        //powerBar = GetComponentInChildren<GameObject>();
+        powerBar.transform.parent.gameObject.SetActive(false);
     }
 
     public void ShowBar()
     {
-        powerBar.SetActive(true);
+        powerBar.transform.parent.gameObject.SetActive(true);
     }
 
     public void HideBar()
@@ -28,7 +28,7 @@ public class PowerBar : MonoBehaviour
     private IEnumerator GreenFN()
     {
         yield return new WaitForSeconds(barHoldTime);
-        powerBar.SetActive(false);
+        powerBar.transform.parent.gameObject.SetActive(false);
     }
 
     public void UpdateBar(float fill)

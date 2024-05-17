@@ -7,16 +7,37 @@ public class Tracker : MonoBehaviour
 {
     private static GameManager gm = GameManager._Instance;
 
-    [SerializeField] GameObject waypoint;
+    [SerializeField] private GameObject waypoint, testEnemy;
+    [SerializeField] private float blinkTime = 2f, diffOnOff = 2f;
 
     private Transform closest;
     private float nearestDistance;
     private Vector2 targDir;
+    private bool blinking = false;
 
     private void Update()
     {
-        FindClosest();
-        waypoint.transform.rotation = Quaternion.LookRotation(new Vector3(targDir.x, targDir.y, 0), Vector3.up);
+        //FindClosest();
+        //PointTracker();
+
+        targDir = testEnemy.transform.position - transform.position;
+        if (!blinking) StartCoroutine(BlinkWaypoint());
+    }
+
+    private IEnumerator BlinkWaypoint()
+    {
+        blinking = true;
+        yield return new WaitForSeconds(blinkTime);
+        PointTracker();
+        yield return new WaitForSeconds(blinkTime / diffOnOff);
+        waypoint.SetActive(false);
+        blinking = false;
+
+    }
+    private void PointTracker()
+    {
+        waypoint.SetActive(true);
+        waypoint.transform.rotation = Quaternion.LookRotation(Vector3.forward, targDir.normalized);
     }
 
     private void FindClosest()

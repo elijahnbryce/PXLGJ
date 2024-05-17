@@ -8,7 +8,7 @@ public class IsoPC : MonoBehaviour
     [SerializeField] private float mSpd = 1f;
     private IsoCRenderer icr;
     private float hIn, vIn;
-    private Vector2 dirIn, currPos, movement, newPos;
+    private Vector2 dirIn, lookDir, currPos, movement, newPos;
     private Rigidbody2D rb;
 
     [Header("Lasso")]
@@ -40,6 +40,7 @@ public class IsoPC : MonoBehaviour
         newPos = currPos + movement * Time.fixedDeltaTime;
         icr.SetDirection(movement);
         rb.MovePosition(newPos);
+        if (dirIn.magnitude > 0.1f) lookDir = dirIn;
     }
 
     private void Update()
@@ -61,7 +62,7 @@ public class IsoPC : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Space))
         {
-            shootDownDuration = Time.time - shootStartTime;
+            shootDownDuration = Mathf.Min(Time.time - shootStartTime, maxHold);
             throwStrength = CalcLaunchPower(shootDownDuration);
             pbnj.UpdateBar(shootDownDuration);
         }
@@ -74,11 +75,11 @@ public class IsoPC : MonoBehaviour
     }
 
     private void Shoot()
-    {        
-        Quaternion quaternion = Quaternion.LookRotation(new Vector3(dirIn.x, dirIn.y, 0), Vector3.up);
+    {              
+        Quaternion quaternion = Quaternion.LookRotation(Vector3.forward, lookDir);
 
-        Transform lasso = Instantiate(lassoPrefab, transform.parent.position, quaternion);
-        lasso.GetComponent<Rigidbody2D>().velocity = dirIn * throwStrength;
+        Transform lasso = Instantiate(lassoPrefab, transform.position, quaternion);
+        lasso.GetComponent<Rigidbody2D>().velocity = lookDir * throwStrength;
         Destroy(lasso.gameObject, projLife);
     }
 
@@ -87,6 +88,7 @@ public class IsoPC : MonoBehaviour
         yeehaw = true;
         Shoot();
         yield return new WaitForSeconds(cooldown);
+        shootStartTime = Time.time; // in case Space held down before player can shoot resulting in no GetKeyDown call and superFast projectile
         yeehaw = false;
     }
 }
