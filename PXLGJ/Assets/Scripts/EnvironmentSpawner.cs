@@ -15,6 +15,7 @@ public class EnvironmentSpawner : MonoBehaviour
     {
         //TileSpawning();
         AreaSpawning();
+        // GetComponent<NavMeshOven>().GenerateLevel();
     }
 
     private void TileSpawning()
@@ -27,12 +28,12 @@ public class EnvironmentSpawner : MonoBehaviour
                 int y = i * objSize;
                 /* For Isometric Tiles */
                     x = (x - y) / 2;
-                    y - (y - x) / 4; 
+                    y = (y - x) / 4; 
                 if (Random.Range(0, 1) < spawnChance) 
                 {
                     int index = Random.Range(0, obstacles.Count);
-                    Transform spwntrans = new Vector3(x , y, 1);
-                    Instantiate(obstacles[index], spwntrans, Quaternion.Identity);
+                    Vector3 spwntrans = new Vector3(x , y, 1);
+                    Instantiate(obstacles[index], spwntrans, Quaternion.identity);
                 }
             }
         }
@@ -40,8 +41,8 @@ public class EnvironmentSpawner : MonoBehaviour
 
     private void AreaSpawning()
     {
-        height = spawningParent.scale.y / 2;
-        width = spawningParent.scale.x / 2;
+        height = Mathf.FloorToInt(spawningParent.localScale.y / 2);
+        width = Mathf.FloorToInt(spawningParent.localScale.x / 2);
 
         for (int i = 0; i < height / objSize; i++)
         {
@@ -54,8 +55,8 @@ public class EnvironmentSpawner : MonoBehaviour
                     if (Random.Range(0, 1) < spawnChance) 
                     {
                         int index = Random.Range(0, obstacles.Count);
-                        Transform spwntrans = new Vector3(spawningParent.position.x - (x * ((k * 2) - 1)) , spawningParent.position.y - (y * ((k * 2) - 1)), 1);
-                        Instantiate(obstacles[index], spwntrans, Quaternion.Identity);
+                        Vector3 spwntrans = new Vector3(spawningParent.position.x - (x * ((k * 2) - 1)) , spawningParent.position.y - (y * ((k * 2) - 1)), 1);
+                        Instantiate(obstacles[index], spwntrans, Quaternion.identity);
                     }
                 }
             }
