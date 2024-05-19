@@ -13,6 +13,7 @@ public class IsoPC : MonoBehaviour
 
     [Header("Lasso")]
     [SerializeField] private Transform lassoPrefab;
+    [SerializeField] private Transform lassoDecal;
     [SerializeField] private float maxPower = 47f, maxHold = 3f, cooldown = 3f, projLife = 3f;
     private float throwStrength, shootStartTime, shootDownDuration;
     private bool yeehaw = false;
@@ -54,6 +55,7 @@ public class IsoPC : MonoBehaviour
         {
             shootStartTime = Time.time;
             pbnj.ShowBar();
+            lassoDecal.gameObject.SetActive(true);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -75,10 +77,11 @@ public class IsoPC : MonoBehaviour
     }
 
     private void Shoot()
-    {              
+    {  
+        lassoDecal.gameObject.SetActive(false);
         Quaternion quaternion = Quaternion.LookRotation(Vector3.forward, lookDir);
 
-        Transform lasso = Instantiate(lassoPrefab, transform.position, quaternion);
+        Transform lasso = Instantiate(lassoPrefab, lassoDecal.position, quaternion);
         lasso.GetComponent<Rigidbody2D>().velocity = lookDir * throwStrength;
         Destroy(lasso.gameObject, projLife);
     }

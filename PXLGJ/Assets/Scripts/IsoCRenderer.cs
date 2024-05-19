@@ -32,7 +32,7 @@ public class IsoCRenderer : MonoBehaviour
             lastDir = DirectionToIndex(dir, 8);
         }
 
-        //anim.Play(dirsArray[lastDir]);
+        anim.Play(dirsArray[lastDir]);
     }
 
     // convert Vector2 direction to an array index in slices around a circle
