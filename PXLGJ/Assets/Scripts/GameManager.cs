@@ -5,10 +5,14 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager _Instance;
-    [SerializeField] private EnemySpawner enemySpawn;
+
+    [SerializeField] private GameObject levelManager;
+    private EnemySpawner enemySpawn;
     public List<GameObject> enemies;
 
-    // private EnvironmentSpawner envSpawn;
+    private EnvironmentSpawner envSpawn;
+    
+    [SerializeField] private Tilemap tileMapBorder;
 
     private int score = 0, lives = 3;
 
@@ -20,7 +24,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //enemySpawn = GetComponent<EnemySpawner>();
+        enemySpawn = levelManager.GetComponent<EnemySpawner>();
+        envSpawn = levelManager.GetComponent<EnvironmentSpawner>();
     }
 
     public int GetEnemyCount()
@@ -36,6 +41,11 @@ public class GameManager : MonoBehaviour
     public void RemoveEnemy(GameObject enemy)
     {
         enemies.Remove(enemy);
+    }
+
+    public Tilemap GetTilemap()
+    {
+        return tileMapBorder;;
     }
 
     public void LoseGame()

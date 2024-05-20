@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps;
 
 public class NarcoBehavior : MonoBehaviour
 {
@@ -18,12 +20,15 @@ public class NarcoBehavior : MonoBehaviour
         showing
     }
 
+    private GameManager gm = GameManager._Instance;
+
     [Header("Movement")]
     [SerializeField] private SpriteStatus status;
     [SerializeField] private EnemyState state;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private Transform escapeListParent;
     private Transform closestEscape;
+    private Vector3 closestTile;
     private Vector2 targDir;
     private NavMeshAgent NAVI;
     private IsoCRenderer icr;
@@ -91,6 +96,35 @@ public class NarcoBehavior : MonoBehaviour
          * tile size?
         bottom left => Vector3 TileOrigin = Camera.main.WorldToScreenPoint(tilemap.origin)
         */
+    }
+
+    private void FindClosesTile()
+    {
+        Tilemap tilemap = gm.GetTilemap();
+        BoundsInt bounds = tilemap.cellBounds;
+        float nearestDistance = 0;
+
+        // looping through all tiles
+        for (int y = bounds.min.y; y < bounds.max.y; y++)
+        {
+            for (int x = bounds.min.x; x < bounds.max.x; x++)
+            {
+                Vector3Int tileLocation = new Vector3Int(x, y, 0);
+                if (tilemap.HasTile(tileLocation))
+                {
+                    Vector3 cellWorldPos = tilemap.GetCellCenterWorld(tileLocation);
+                    Vector2 dir2 = new Vector2(cellWorldPos.x, cellWorldPos.y) - new Vector2(transform.position.x, transform.position.y);
+                    float distance2 = dir2.magnitude;
+                    if (distance2 < nearestDistance || nearestDistance == 0)
+                    {
+                        closestTile = cellWorldPos;
+                        nearestDistance = distance2;
+                        targDir = dir2;
+                    }
+                }
+            }
+        }
+        SetWaypoint(closestTile);
     }
 
     private void MoveEnemy()

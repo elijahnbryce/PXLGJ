@@ -10,7 +10,7 @@ public class EnvironmentSpawner : MonoBehaviour
     [SerializeField] private float spawnChance = 0.13f, spawnRange = 27f;
     [SerializeField] private List<GameObject> obstacles;
     //[SerializeField] private GameObject objPref;
-    [SerializeField] private Tilemap tilemap;
+    [SerializeField] public Tilemap tilemap;
     // [SerializeField] private GameObject listObj;
 
     private void Start()
