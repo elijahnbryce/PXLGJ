@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class EnvironmentSpawner : MonoBehaviour
 {
-    [SerializeField] private int height, width, objSize = 3;
+    [SerializeField] private int objSize = 3;
     [SerializeField] private Transform spawningParent;
     [SerializeField] private float spawnChance = 0.13f, spawnRange = 27f;
     [SerializeField] private List<GameObject> obstacles;
@@ -53,7 +53,7 @@ public class EnvironmentSpawner : MonoBehaviour
         }
         GetComponent<NavMeshOven>().GenerateLevel();
     }
-
+/*
     private void AreaSpawning()
     {
         height = Mathf.FloorToInt(spawningParent.localScale.y / 2);
@@ -76,5 +76,5 @@ public class EnvironmentSpawner : MonoBehaviour
                 }
             }
         }
-    }
+    }*/
 }

@@ -52,7 +52,7 @@ public class NarcoBehavior : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
 
         //FindClosestEscape();
-
+        //FindClosesTile();  
     }
     private void Update()
     {

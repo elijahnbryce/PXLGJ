@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     private EnvironmentSpawner envSpawn;
     
-    [SerializeField] private Tilemap tileMapBorder;
+    [SerializeField] private Tilemap tilemapBorder;
 
     private int score = 0, lives = 3;
 
@@ -45,7 +46,7 @@ public class GameManager : MonoBehaviour
 
     public Tilemap GetTilemap()
     {
-        return tileMapBorder;;
+        return tilemapBorder;
     }
 
     public void LoseGame()
