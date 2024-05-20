@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -16,10 +17,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float spawnrange = 47f;
 
+    [Header("Tilemap")]
+    private Tilemap tilemap;
+
 
     private void Start()
     {
         gm = GameManager._Instance;
+        //tilemap = gm.GetTilemap();
     }
 
     private void Update()

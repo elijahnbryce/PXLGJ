@@ -11,13 +11,22 @@ public class NarcoBehavior : MonoBehaviour
         caught
     }
 
+    public enum SpriteStatus
+    {
+        hiding,
+        bubbling,
+        showing
+    }
+
     [Header("Movement")]
+    [SerializeField] private SpriteStatus status;
     [SerializeField] private EnemyState state;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private Transform escapeListParent;
     private Transform closestEscape;
     private Vector2 targDir;
     private NavMeshAgent NAVI;
+    private IsoCRenderer icr;
 
 
     [Header("Sprite")]
@@ -25,6 +34,7 @@ public class NarcoBehavior : MonoBehaviour
     [SerializeField] private float[] statuses = { timeHidden, bubbleTime, timeShown };
     private string[] statusAnims = { "Hide", "Bubble", "Show" };
     private Animator anim;
+    private SpriteRenderer sr;
 
     public float statusTime;
     public int statusIndex;
@@ -33,7 +43,10 @@ public class NarcoBehavior : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         NAVI = GetComponent<NavMeshAgent>();
-        FindClosestEscape();
+        icr = GetComponentInChildren<IsoCRenderer>();
+        sr = GetComponent<SpriteRenderer>();
+
+        //FindClosestEscape();
 
     }
     private void Update()
@@ -41,12 +54,12 @@ public class NarcoBehavior : MonoBehaviour
         switch (state)
         {
             case EnemyState.running:
-                MoveEnemy();
+                //MoveEnemy();
                 RotateStatus();
                 break;
             
             case EnemyState.caught:
-                NAVI.isStopped = true;
+                //NAVI.isStopped = true;
                 break;
         }
     }
@@ -102,6 +115,23 @@ public class NarcoBehavior : MonoBehaviour
     {
         statusTime = statuses[statusIndex];
         anim.Play(statusAnims[statusIndex]);
+        switch (statusIndex)
+        {
+            case 0:
+                sr.enabled = false;
+                Debug.Log("Hiding");
+                break;
+            case 1:
+                sr.enabled = true;
+                //icr.SetDirection(movement);
+                Debug.Log("Bubbling");
+                break;
+            case 2:
+                sr.enabled = true;
+                //icr.SetDirection(movement, true);
+                Debug.Log("Showing");
+                break;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

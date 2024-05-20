@@ -6,6 +6,7 @@ public class IsoCRenderer : MonoBehaviour
 {
     public static readonly string[] sDirs = {"Static N", "Static NW", "Static W", "Static SW", "Static S", "Static SE", "Static E", "Static NE" };
     public static readonly string[] rDirs = {"Run N", "Run NW", "Run W", "Run SW", "Run S", "Run SE", "Run E", "Run NE" };
+    public static readonly string[] bDirs = { "Bubbles N", "Bubbles NW", "Bubbles W", "Bubbles SW", "Bubbles S", "Bubbles SE", "Bubbles E", "Bubbles NE" };
 
     private Animator anim;
     private int lastDir; //holds player direction while not moving
@@ -15,7 +16,7 @@ public class IsoCRenderer : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
-    public void SetDirection(Vector2 dir)
+    public void SetDirection(Vector2 dir, bool enemyBubble = false)
     {
         // default rDirs
         string[] dirsArray = null;
@@ -31,6 +32,9 @@ public class IsoCRenderer : MonoBehaviour
             dirsArray = rDirs;
             lastDir = DirectionToIndex(dir, 8);
         }
+
+        // enemyBubbles used on enemies only if they have enum SpriteStatus.bubbling
+        if (enemyBubble) dirsArray = bDirs;
 
         anim.Play(dirsArray[lastDir]);
     }

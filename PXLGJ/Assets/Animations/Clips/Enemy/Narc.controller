@@ -74,7 +74,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveSE 0
+  m_Name: Bubble SE
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -100,7 +100,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveW
+  m_Name: Run W
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -126,7 +126,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveNE 0
+  m_Name: Bubble NE
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -152,7 +152,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveN 0
+  m_Name: Bubble N
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -178,7 +178,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveN
+  m_Name: Run N
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -204,7 +204,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveSE
+  m_Name: Run SE
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -252,7 +252,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveNE
+  m_Name: Run NE
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -278,7 +278,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveE 0
+  m_Name: Bubble E
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -304,7 +304,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveSW
+  m_Name: Run SW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -330,7 +330,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveW 0
+  m_Name: Bubble W
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -356,7 +356,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BubbleSW
+  m_Name: Bubble SW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -382,7 +382,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveE
+  m_Name: Run E
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -408,7 +408,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveS
+  m_Name: Run S
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -434,7 +434,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveNW
+  m_Name: Run NW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -460,7 +460,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveNW 0
+  m_Name: Bubble NW
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -486,7 +486,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveS 0
+  m_Name: Bubble S
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

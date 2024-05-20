@@ -149,13 +149,14 @@ GameObject:
   - component: {fileID: 186757610}
   - component: {fileID: 186757609}
   - component: {fileID: 186757608}
+  - component: {fileID: 186757611}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &186757608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,11 +173,11 @@ MonoBehaviour:
   width: 0
   objSize: 3
   spawningParent: {fileID: 862101965}
-  spawnChance: 0.13
+  spawnChance: 0.07
   spawnRange: 27
   obstacles:
   - {fileID: 568283054387258828, guid: 614d4cb10cb6d0448b6773e2710619eb, type: 3}
-  objParent: {fileID: 862101964}
+  tilemap: {fileID: 777729630}
 --- !u!114 &186757609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,11 +193,11 @@ MonoBehaviour:
   spawnTime: 13
   shortestInterval: 3
   spawning: 0
-  spawnLimit: 10
+  spawnLimit: 3
   narcoP: {fileID: 3098583372327542676, guid: bb006a39257e0f24d9a1c4c15b7d2f87, type: 3}
   enemyHolder: {fileID: 1535471671}
   spawnPoint: {fileID: 1535471672}
-  spawnrange: 47
+  spawnrange: 10
 --- !u!4 &186757610
 Transform:
   m_ObjectHideFlags: 0
@@ -212,6 +213,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &186757611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186757607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0373f94d5714ac04ba7f9b3756c9fd75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surface2D: {fileID: 472527574}
 --- !u!1 &440367922
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +283,8 @@ GameObject:
   - component: {fileID: 472527575}
   - component: {fileID: 472527574}
   - component: {fileID: 472527573}
-  - component: {fileID: 472527576}
+  - component: {fileID: 472527578}
+  - component: {fileID: 472527577}
   m_Layer: 0
   m_Name: NavMesh
   m_TagString: Untagged
@@ -289,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70bd44a44cd62c64fbfc1eea95b24880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_OverrideByGrid: 1
+  m_OverrideByGrid: 0
   m_UseMeshPrefab: {fileID: 0}
   m_CompressBounds: 1
   m_OverrideVector: {x: 1, y: 1, z: 1}
@@ -306,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_CollectObjects: 0
+  m_CollectObjects: 2
   m_Size: {x: 22.68, y: 10, z: 10}
   m_Center: {x: 0, y: -4.32, z: 0}
   m_LayerMask:
@@ -322,7 +337,7 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 642aa871e65864a4bbdd450afe798200, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!4 &472527575
 Transform:
   m_ObjectHideFlags: 0
@@ -338,7 +353,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &472527576
+--- !u!114 &472527577
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -347,7 +362,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 472527572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0373f94d5714ac04ba7f9b3756c9fd75, type: 3}
+  m_Script: {fileID: 11500000, guid: 6fec7b7904f76c4498a68fd145934563, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rootSources:
+  - {fileID: 2112149357}
+--- !u!114 &472527578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472527572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5492b7ed96378624cbcd72212fce093d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028
@@ -8075,6 +8104,10 @@ PrefabInstance:
     - target: {fileID: 4189158133215874017, guid: bb006a39257e0f24d9a1c4c15b7d2f87, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -59.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7205096509133287620, guid: bb006a39257e0f24d9a1c4c15b7d2f87, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
