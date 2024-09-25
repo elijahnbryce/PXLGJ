@@ -13,20 +13,22 @@ public class EnvironmentSpawner : MonoBehaviour
     [SerializeField] public Tilemap tilemap;
     // [SerializeField] private GameObject listObj;
 
+    private MapManager MM = MapManager._Instance;
+
     private void Start()
     {
-        TileSpawning();
+        TileSpawning(); // block Left(-1,0) Down(-1,-1) Right(0,-1) : tile on (7,6) should block (6,6) (6,5) (7,5)
         //AreaSpawning();
     }
-
+    
     private void TileSpawning()
     {
         BoundsInt bounds = tilemap.cellBounds;
 
         // looping through all tiles
-        for (int j = bounds.min.y; j < bounds.max.y / objSize; j++)
+        for (int j = bounds.min.y, j1 = bounds.max.y / objSize; j < j1; j++)
         {
-            for (int k = bounds.min.x; k < bounds.max.x / objSize; k++)
+            for (int k = bounds.min.x, k1 = bounds.max.x / objSize; k < k1; k++)
             {
                 int x = k * objSize;
                 int y = j * objSize;
@@ -47,6 +49,8 @@ public class EnvironmentSpawner : MonoBehaviour
                         var obstacle = Instantiate(obstacles[index], spawningParent);
                         obstacle.transform.position = spwntrans;
                         obstacle.GetComponent<SpriteRenderer>().sortingOrder = tilemap.GetComponent<TilemapRenderer>().sortingOrder + 1;
+
+                        MM.SetTileUnwalkable(spwntrans);
                     }
                 }
             }
