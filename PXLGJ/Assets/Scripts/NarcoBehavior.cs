@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Tilemaps;
 
 public class NarcoBehavior : MonoBehaviour
@@ -19,19 +19,20 @@ public class NarcoBehavior : MonoBehaviour
         bubbling,
         showing
     }
-
-    private GameManager gm = GameManager._Instance;
+    private static GameManager gm = GameManager._Instance;
 
     [Header("Movement")]
     [SerializeField] private SpriteStatus status;
     [SerializeField] private EnemyState state;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private Transform escapeListParent;
+    [SerializeField] private int pathIndex;
     private Transform closestEscape;
     private Vector3 closestTile;
     private Vector2 targDir;
-    private NavMeshAgent NAVI;
+    private Pathfinding NAVI;
     private IsoCRenderer icr;
+    private List<Vector3> escapeNoodles;
 
 
     [Header("Sprite")]
@@ -47,91 +48,117 @@ public class NarcoBehavior : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        NAVI = GetComponent<NavMeshAgent>();
+        NAVI = new Pathfinding();
         icr = GetComponentInChildren<IsoCRenderer>();
         sr = GetComponent<SpriteRenderer>();
-
-        //FindClosestEscape();
-        //FindClosesTile();  
+        SearchForEscape();  
     }
     private void Update()
     {
         switch (state)
         {
             case EnemyState.running:
-                //MoveEnemy();
+                MoveEnemy();
                 RotateStatus();
                 break;
             
             case EnemyState.caught:
-                //NAVI.isStopped = true;
+                //isStopped = true;
+                Debug.Log(gameObject.name + " has been caught");
                 break;
         }
     }
-    private void SetWaypoint(Vector3 pos)
+    private List<Vector3> SetWaypoint(Vector3 stop)
     {
-        NAVI.SetDestination(pos);
+        MapManager mm = MapManager._Instance;
+        Vector3Int start = mm.GetGridPos(transform.position);
+        Vector3Int end = mm.GetGridPos(stop);
+        List<Vector3> escapeNoodles = NAVI.FindPathVectors(start.x, start.y, end.x, end.y);
+        return escapeNoodles;
     }
 
-    private void FindClosestEscape()
+    private void SearchForEscape()
     {
-        float nearestDistance = 0;
-        foreach (Transform child in escapeListParent)
+        MapManager mm = MapManager._Instance;
+        Tilemap tilemap = mm.map;
+        BoundsInt bounds = mm.bounds;
+        //float nearestDistance = 0;
+
+ 
+        int[] yBounds = { bounds.max.y - 1, bounds.min.y };
+        int[] xBounds = { bounds.max.x - 1, bounds.min.x };
+
+        Vector3Int gridPos = mm.GetGridPos(transform.position);
+        int xTarg = (Mathf.Abs(gridPos.x - xBounds[0]) > Mathf.Abs(gridPos.x - xBounds[1])) 
+            ? xBounds[1] : xBounds[0];
+        int yTarg = (Mathf.Abs(gridPos.y - yBounds[0]) > Mathf.Abs(gridPos.y - yBounds[1])) 
+            ? yBounds[1] : yBounds[0];
+        Vector3Int tileLocation = (Mathf.Abs(gridPos.x - xTarg) > Mathf.Abs(gridPos.y - yTarg)) 
+            ? new Vector3Int(Random.Range(bounds.min.x, bounds.max.x), yTarg, 0) 
+            : new Vector3Int(xTarg, Random.Range(bounds.min.y, bounds.max.y), 0);
+        if (tilemap.HasTile(tileLocation))
         {
-            Vector2 dir2 = child.position - transform.position;
-            float distance2 = dir2.magnitude;
-            if (distance2 < nearestDistance || nearestDistance == 0)
-            {
-                closestEscape = child;
-                nearestDistance = distance2;
-                targDir = dir2;
-            }
+            closestTile = tilemap.GetCellCenterWorld(tileLocation);
+            targDir = new Vector2(closestTile.x, closestTile.y) - new Vector2(transform.position.x, transform.position.y);
         }
 
-        SetWaypoint(closestEscape.position);
+        //for (int y = bounds.min.y, rangeY = bounds.max.y; y < rangeY; y++)
+        //{
+        //    for (int x = bounds.min.x, rangeX = bounds.max.x; x < rangeX; x++)
+        //    {
+        //        // skip if not a permiter tile
+        //        if (!xBounds.Contains(x) && !yBounds.Contains(y)) continue;
 
-        /*
-        GetComponent<Tilemap>().CompressBounds();
-        GetComponent<Tilemap>().size;
-         * tile size?
-        bottom left => Vector3 TileOrigin = Camera.main.WorldToScreenPoint(tilemap.origin)
-        */
-    }
-
-    private void FindClosesTile()
-    {
-        Tilemap tilemap = gm.GetTilemap();
-        BoundsInt bounds = tilemap.cellBounds;
-        float nearestDistance = 0;
-
-        // looping through all tiles
-        for (int y = bounds.min.y; y < bounds.max.y; y++)
-        {
-            for (int x = bounds.min.x; x < bounds.max.x; x++)
-            {
-                Vector3Int tileLocation = new Vector3Int(x, y, 0);
-                if (tilemap.HasTile(tileLocation))
-                {
-                    Vector3 cellWorldPos = tilemap.GetCellCenterWorld(tileLocation);
-                    Vector2 dir2 = new Vector2(cellWorldPos.x, cellWorldPos.y) - new Vector2(transform.position.x, transform.position.y);
-                    float distance2 = dir2.magnitude;
-                    if (distance2 < nearestDistance || nearestDistance == 0)
-                    {
-                        closestTile = cellWorldPos;
-                        nearestDistance = distance2;
-                        targDir = dir2;
-                    }
-                }
-            }
-        }
-        SetWaypoint(closestTile);
+        //        Vector3Int tileLocation = new Vector3Int(x, y, 0);
+        //        if (tilemap.HasTile(tileLocation))
+        //        {
+        //            Vector3 cellWorldPos = tilemap.GetCellCenterWorld(tileLocation);
+        //            Vector2 dir2 = new Vector2(cellWorldPos.x, cellWorldPos.y) - new Vector2(transform.position.x, transform.position.y);
+        //            float distance2 = dir2.magnitude;
+        //            if (distance2 < nearestDistance || nearestDistance == 0)
+        //            {
+        //                //Debug.Log("found closer tile: " + tileLocation + "\n" + cellWorldPos + " " + distance2);
+        //                closestTile = cellWorldPos;
+        //                nearestDistance = distance2;
+        //                targDir = dir2;
+        //            }
+        //        }
+        //    }
+        //}
+        Debug.Log(gameObject.name + " Nearest Escape: " + closestTile);
+        escapeNoodles = SetWaypoint(closestTile);
     }
 
     private void MoveEnemy()
     {
-        NAVI.isStopped = false;
-        // Navmesh probablby
-        // move twrds closestEscape
+        if (escapeNoodles != null)
+        {
+            Vector3 targ = escapeNoodles[pathIndex];
+            if (Vector3.Distance(transform.position, targ) > 1f)
+            {
+                Vector3 moveDir = (targ - transform.position).normalized;
+                // face direction
+                transform.position = transform.position + moveDir * moveSpeed * Time.deltaTime;
+            }
+            else
+            {
+                pathIndex++;
+                if (pathIndex >= escapeNoodles.Count)
+                {
+                    Debug.Log(gameObject.name + " has escaped out to sea");
+                    escapeNoodles.Clear();
+                    NAVI.ClearPath();
+                    //gm.RemoveEnemy(gameObject);
+                    Destroy(gameObject);
+                    // lose points
+                }
+            }
+        }
+        else
+        {
+            // stop moving
+            Debug.Log(gameObject.name + " has nowhere left to go");
+        }
     }
 
 

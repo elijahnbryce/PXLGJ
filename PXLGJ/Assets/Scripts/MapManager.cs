@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public class MapManager : MonoBehaviour
@@ -11,23 +12,27 @@ public class MapManager : MonoBehaviour
     [SerializeField] private List<TileData> tileDataList;
     private Dictionary<Vector3Int, PathNode> tileDict;
 
-    private Pathfinding testfind;
+    //private Pathfinding testfind;
+    public BoundsInt bounds;
 
     private void Awake()
     {
         _Instance = this;
         GeneratePathGrid();
+
+        Debug.Log(map.HasTile(new Vector3Int(bounds.max.x-1, bounds.max.y-1, 0)));
+        Debug.Log(map.HasTile(new Vector3Int(bounds.min.x, bounds.min.y, 0)));
     }
 
     public void GeneratePathGrid()
     {
         tileDict = new Dictionary<Vector3Int, PathNode>();
-        BoundsInt bounds = map.cellBounds;
+        bounds = map.cellBounds;
         Debug.Log("bounds " + bounds.min.y + " " + bounds.max.y + " " + bounds.min.x + " " + bounds.max.x);
         // looping through all tiles
-        for (int y = bounds.min.y, y1 = bounds.max.y; y <= y1; y++)
+        for (int y = bounds.min.y, y1 = bounds.max.y; y < y1; y++)
         {
-            for (int x = bounds.min.x, x1 = bounds.max.x; x <= x1; x++)
+            for (int x = bounds.min.x, x1 = bounds.max.x; x < x1; x++)
             {
                 Vector3Int tileLocation = new Vector3Int(x, y, 0);
                 if (map.HasTile(tileLocation))
@@ -40,33 +45,38 @@ public class MapManager : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        //if(Input.GetMouseButtonDown(0))
+        //{
+        //    Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    Vector3Int gridPos = map.WorldToCell(mousePos);
+
+        //    TileBase clickedTile = map.GetTile(gridPos);
+        //    bool walkableTile = tileDict[gridPos].isWalkable;
+        //    Debug.Log("At position " + gridPos + "there is a " + clickedTile + "with isWalkable: " + walkableTile);
+        //    List<PathNode> testNoodles = testfind.FindPath(0, 0, gridPos.x, gridPos.y);
+        //    DrawPath(testNoodles);
+        //    testfind.ClearPath();
+        //}
+    }
+
+    public void DrawPath(List<PathNode> noodles)
+    {
+        if (noodles != null)
         {
-            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int gridPos = map.WorldToCell(mousePos);
-            
-            TileBase clickedTile = map.GetTile(gridPos);
-            bool walkableTile = tileDict[gridPos].isWalkable;
-            Debug.Log("At position " + gridPos + "there is a " + clickedTile + "with isWalkable: " + walkableTile);
-            List<PathNode> testNoodles = testfind.FindPath(0, 0, gridPos.x, gridPos.y);
-            if (testNoodles != null)
+            for (int i = 0; i < noodles.Count - 1; ++i)
             {
-                for (int i = 0; i < testNoodles.Count - 1; ++i)
-                {
-                    Vector3 sp = map.CellToWorld(new Vector3Int(testNoodles[i].x, testNoodles[i].y, 0));
-                    Vector3 sp2 = map.CellToWorld(new Vector3Int(testNoodles[i+1].x, testNoodles[i+1].y, 0));
-                    Debug.DrawLine(sp, sp2, Color.red, 10f, false);
-                    //Debug.Log(testNoodles[i].x + "," + testNoodles[i].y);
-                }
+                Vector3 sp = map.CellToWorld(new Vector3Int(noodles[i].x, noodles[i].y, 0));
+                Vector3 sp2 = map.CellToWorld(new Vector3Int(noodles[i + 1].x, noodles[i + 1].y, 0));
+                Debug.DrawLine(sp, sp2, Color.red, 10f, false);
+                //Debug.Log(testNoodles[i].x + "," + testNoodles[i].y);
             }
-            testfind.ClearPath();
         }
     }
 
     private void Start()
     {
         // Testing
-        testfind = new Pathfinding();
+        //testfind = new Pathfinding();
     }
 
     public Dictionary<Vector3Int, PathNode> GetTilesDict()
@@ -97,5 +107,20 @@ public class MapManager : MonoBehaviour
                 targ.isWalkable = set;
             }
         }
+    }
+
+    public Vector3 GetWorldPos(PathNode nood)
+    {
+        return map.CellToWorld(new Vector3Int(nood.x, nood.y, 0));
+    }
+
+    public Vector3Int GetGridPos(Vector3 coords) 
+    {
+        return map.WorldToCell(coords);
+    }
+
+    public bool CheckMap(Vector3Int loc)
+    {
+        return map.HasTile(loc);
     }
 }

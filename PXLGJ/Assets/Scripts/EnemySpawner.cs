@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class EnemySpawner : MonoBehaviour
 {
     private static GameManager gm;
+    private static MapManager mm;
 
     [Header("Time")]
     [SerializeField] private float spawnTime = 13f, shortestInterval = 3f;
@@ -15,16 +16,19 @@ public class EnemySpawner : MonoBehaviour
     [Header("Area")]
     [SerializeField] private GameObject narcoP, enemyHolder;
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private float spawnrange = 47f;
+    [SerializeField] private int spawnrange = 7;
 
     [Header("Tilemap")]
     private Tilemap tilemap;
+    private BoundsInt bounds;
 
 
     private void Start()
     {
         gm = GameManager._Instance;
-        //tilemap = gm.GetTilemap();
+        mm = MapManager._Instance;
+        tilemap = MapManager._Instance.map;
+        bounds = MapManager._Instance.bounds;
     }
 
     private void Update()
@@ -36,9 +40,10 @@ public class EnemySpawner : MonoBehaviour
     {
         if (gm.GetEnemyCount() <= spawnLimit)
         {
-            float randomX = Random.Range(-spawnrange, spawnrange);
-            float randomY = Random.Range(-spawnrange, spawnrange);
-            Vector3 thisSpawn = new Vector3(spawnPoint.transform.position.x + randomX, spawnPoint.transform.position.y + randomY, 0);
+            int randomX = Random.Range(bounds.min.x + spawnrange, bounds.max.x - spawnrange);
+            int randomY = Random.Range(bounds.min.y + spawnrange, bounds.max.y - spawnrange);
+            Vector3 thisSpawn = tilemap.GetCellCenterWorld(new Vector3Int(randomX, randomY));
+            //Vector3 thisSpawn = new Vector3(spawnPoint.transform.position.x + randomX, spawnPoint.transform.position.y + randomY, 0);
             
             GameObject newNarc = Instantiate(narcoP, thisSpawn, spawnPoint.rotation);
             newNarc.transform.parent = enemyHolder.transform;

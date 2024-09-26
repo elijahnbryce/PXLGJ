@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Status")]
     public int lives = 3;
     public int score;
+    [SerializeField, Range(1,3)] public int difficultySlider = 2; //2 on normal, 1 on easy, 3 on hard
     //public Timer ts;
     //public float totalTime;
     private bool gamePaused, gameActive, noPausing;
@@ -213,6 +214,7 @@ public class GameManager : MonoBehaviour
     public void RemoveEnemy(GameObject enemy)
     {
         enemies.Remove(enemy);
+        Destroy(enemy);
     }
     public int GetEnemyCount()
     {

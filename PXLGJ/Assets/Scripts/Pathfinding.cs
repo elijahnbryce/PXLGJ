@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 public class Pathfinding
 {
     private static MapManager MM = MapManager._Instance;
+    private static GameManager gm = GameManager._Instance;
     private Tilemap tm = MM.map;
     private Dictionary<Vector3Int, PathNode> grid;
     private BoundsInt bounds;
@@ -19,7 +20,6 @@ public class Pathfinding
 
     public Pathfinding()
     {
-        Debug.Log("New Pathfing");
         grid = MM.GetTilesDict();
         bounds = tm.cellBounds;
     }
@@ -70,6 +70,21 @@ public class Pathfinding
         return null;
     }
 
+    public List<Vector3> FindPathVectors(int startX, int startY, int endX, int endY)
+    {
+        List<PathNode> noodles = FindPath(startX, startY, endX, endY);
+        List<Vector3> cookedNoodles = new List<Vector3>();
+
+        if (noodles == null) return null;
+        MM.DrawPath(noodles);
+
+        foreach (PathNode nood in noodles)
+        {
+            cookedNoodles.Add(MM.GetWorldPos(nood));
+        }
+        return cookedNoodles;
+    }
+
     private List<PathNode> GetNeightbours(PathNode cNode)
     {
         List<PathNode> neighbors = new List<PathNode>();
@@ -97,8 +112,7 @@ public class Pathfinding
 
      private List<PathNode> CalculatePath(PathNode endNode)
     {
-        List<PathNode> noodles = new List<PathNode>();
-        noodles.Add(endNode);
+        List<PathNode> noodles = new List<PathNode> { endNode };
         PathNode cNode = endNode;
         while (cNode.searchedFrom != null)
         {
@@ -133,14 +147,28 @@ public class Pathfinding
 
     private PathNode GetLowestFCost(List<PathNode> pathList)
     {
-        // TODO: randomly choose not the lowest cost
-        // bool whiff = (Random.RandRange(0, 100 / (2 ** difficultySlider) / 100) difficultySlider set to 2 on normal, 1 on easy, 3 on hard
+        // randomly choose not the lowest cost
+        bool whiff = (Random.Range(0f, 1f) < 100 / Mathf.Pow(2, gm.difficultySlider) / 100);
         PathNode lowestFCost = pathList[0];
-        for (int i = 1, length = pathList.Count; i < length; i++)
+        if (whiff) 
         {
-            if (pathList[i].fCost < lowestFCost.fCost)
-            { 
-                lowestFCost = pathList[i];
+            for (int i = 1, length = pathList.Count; i < length; i++)
+            {
+                if (pathList[i].fCost > lowestFCost.fCost)
+                {
+                    lowestFCost = pathList[i];
+                }
+            }
+        }
+        else
+        {
+            for (int i = 1, length = pathList.Count; i < length; i++)
+            {
+                if (pathList[i].fCost < lowestFCost.fCost)
+                {
+                    if (Random.Range(0f, 1f) < 100 / Mathf.Pow(2, gm.difficultySlider) / 100) continue;
+                    lowestFCost = pathList[i];
+                }
             }
         }
         return lowestFCost;

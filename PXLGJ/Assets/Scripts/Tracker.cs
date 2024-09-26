@@ -19,9 +19,11 @@ public class Tracker : MonoBehaviour
     {
         //FindClosest();
         //PointTracker();
-
-        targDir = testEnemy.transform.position - transform.position;
-        if (!blinking) StartCoroutine(BlinkWaypoint());
+        if (testEnemy != null)
+        {
+            targDir = testEnemy.transform.position - transform.position;
+            if (!blinking) StartCoroutine(BlinkWaypoint());
+        }
     }
 
     private IEnumerator BlinkWaypoint()

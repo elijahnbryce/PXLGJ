@@ -13,10 +13,11 @@ public class EnvironmentSpawner : MonoBehaviour
     [SerializeField] public Tilemap tilemap;
     // [SerializeField] private GameObject listObj;
 
-    private MapManager MM = MapManager._Instance;
+    private MapManager MM;
 
     private void Start()
     {
+        MM = MapManager._Instance;
         TileSpawning(); // block Left(-1,0) Down(-1,-1) Right(0,-1) : tile on (7,6) should block (6,6) (6,5) (7,5)
         //AreaSpawning();
     }
@@ -40,7 +41,7 @@ public class EnvironmentSpawner : MonoBehaviour
                 Vector3Int tileLocation = new Vector3Int(x, y, z);
                 if (tilemap.HasTile(tileLocation))
                 {
-                    if (Random.Range(0f, 1f) < spawnChance)
+                    if (Random.Range(0f, 1f) < spawnChance * GameManager._Instance.difficultySlider)
                     {
                         var cellWorldPos = tilemap.GetCellCenterWorld(tileLocation);
                         Vector3 spwntrans = new Vector3(cellWorldPos.x, cellWorldPos.y, cellWorldPos.z + 1);
